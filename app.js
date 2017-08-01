@@ -1,29 +1,24 @@
 //app.js
 App({
-  onLaunch: function() {
-    //调用API从本地缓存中获取数据
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-  },
-
-  getUserInfo: function(cb) {
-    var that = this
-    if (this.globalData.userInfo) {
-      typeof cb == "function" && cb(this.globalData.userInfo)
-    } else {
-      //调用登录接口
-      wx.getUserInfo({
-        withCredentials: false,
-        success: function(res) {
-          that.globalData.userInfo = res.userInfo
-          typeof cb == "function" && cb(that.globalData.userInfo)
-        }
-      })
+  login(callback, userInfoRaw) {
+    wx.login({}) // 现在，调用 wx.login 是一个可选项了。只有当你需要使用微信登录鉴别用户，才需要用到它，用来获取用户的匿名识别符
+    if (userInfoRaw.detail.errMsg == 'getUserInfo:ok') {
+      let userInfo = JSON.parse(userInfoRaw.detail.rawData)
+        //wx.request({}) // 将用户信息、匿名识别符发送给服务器，调用成功时执行 callback(null, res)
+      try {
+        wx.setStorageSync('user', userInfo)
+      }
+      catch (e) {
+        // 处理错误
+      }
+      callback(null, userInfo)
     }
-  },
-
-  globalData: {
-    userInfo: null
+    else if (userinfo.detail.errMsg == 'getUserInfo:fail auth deny') {
+      wx.showModal({
+          title: '提示',
+          content: '需要授权才能获取资料'
+        }) // 提示用户，需要授权才能获取资料
+      callback('fail to modify scope', null)
+    }
   }
 })
