@@ -5,6 +5,6 @@
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
   </view>
   <view class="usermotto">
-    <button class='hiddenbtn' bindgetuserinfo='login' open-type='getUserInfo'>点击获取资料</button>
+    <button class='hiddenbtn' bindtap='canILogin' bindgetuserinfo='login' open-type='getUserInfo'>点击获取资料</button>
   </view>
 </view>
